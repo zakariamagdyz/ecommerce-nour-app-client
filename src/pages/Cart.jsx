@@ -1,12 +1,16 @@
 import { Add, Remove } from "@mui/icons-material";
 import styled from "styled-components";
 import Announcement from "../components/Announcement.jsx";
+import Footer from "../components/Footer.jsx";
+import Navbar from "../components/Navbar.jsx";
 
 import mediaDevices from "../style/mediaDevices.js";
 //////////////////////////////////////
 const Container = styled.div``;
 const Wrapper = styled.div`
   padding: 2rem;
+  margin-top: 8rem;
+  margin-bottom: 12rem;
 `;
 const Title = styled.h1`
   font-weight: 300;
@@ -114,7 +118,7 @@ const Summary = styled.div`
   border: 1px solid lightgray;
   border-radius: 1rem;
   padding: 2rem;
-  height: 50vh;
+  align-self: flex-start;
 `;
 
 const SummaryTitle = styled.h1`
@@ -135,6 +139,7 @@ const SummaryButton = styled.button`
   background-color: black;
   color: white;
   font-weight: 600;
+  cursor: pointer;
 `;
 
 //////////////////////////////////////
@@ -142,6 +147,8 @@ const SummaryButton = styled.button`
 const Cart = () => {
   return (
     <Container>
+      <Navbar />
+      <Announcement />
       <Wrapper>
         <Title>YOUR BAG</Title>
         <Top>
@@ -230,6 +237,8 @@ const Cart = () => {
           </Summary>
         </Bottom>
       </Wrapper>
+
+      <Footer />
     </Container>
   );
 };

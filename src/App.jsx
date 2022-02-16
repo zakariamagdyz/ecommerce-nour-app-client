@@ -1,11 +1,11 @@
 import { createGlobalStyle } from "styled-components";
-import Navbar from "./components/Navbar.jsx";
-import Footer from "./components/Footer.jsx";
 import RouterConfig from "./components/RouterConfig.jsx";
 
+import { toast, ToastContainer } from "react-toastify";
+import { injectStyle } from "react-toastify/dist/inject-style";
+
 import mediaDevices from "./style/mediaDevices.js";
-import Newsletter from "./components/Newsletter.jsx";
-import Announcement from "./components/Announcement.jsx";
+
 ///////////////////////////////////////////////////////
 
 const global = { createGlobalStyle };
@@ -58,15 +58,16 @@ body{
 
 ///////////////////////////////////////////////////////
 
+if (window) {
+  injectStyle();
+}
+
 const App = () => {
   return (
     <div>
       <GlobalStyle />
-      <Navbar />
-      <Announcement />
+      <ToastContainer />
       <RouterConfig />
-      <Newsletter />
-      <Footer />
     </div>
   );
 };

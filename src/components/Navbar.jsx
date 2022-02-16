@@ -4,6 +4,7 @@ import { Search } from "@mui/icons-material";
 import Badge from "@mui/material/Badge";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import mediaDevices from "../style/mediaDevices.js";
+import { Link } from "react-router-dom";
 ////////////////////////////////////////////////////////////
 
 const Container = styled.div`
@@ -71,10 +72,12 @@ const Logo = styled.h1`
   text-align: center;
 `;
 
-const MenuItem = styled.div`
+const MenuItem = styled(Link)`
   font-size: 1.4rem;
+  text-decoration: none;
   cursor: pointer;
   margin-left: 2.5rem;
+  color: #333 !important;
 
   span {
     min-width: 1rem;
@@ -102,9 +105,10 @@ const Navbar = () => {
           <Logo>LAMA.</Logo>
         </Center>
         <Right>
-          <MenuItem>REGISTER</MenuItem>
-          <MenuItem>SIGN IN</MenuItem>
-          <MenuItem>
+          <MenuItem to="/">HOME</MenuItem>
+          <MenuItem to="/register">REGISTER</MenuItem>
+          <MenuItem to="/login">SIGN IN</MenuItem>
+          <MenuItem as="div">
             <Badge badgeContent={1} color="primary">
               <ShoppingCartOutlinedIcon />
             </Badge>

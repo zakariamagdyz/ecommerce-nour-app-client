@@ -1,14 +1,30 @@
 import { Add, Remove } from "@mui/icons-material";
 import styled from "styled-components";
+import { useState, useEffect } from "react";
+import Spinner from "../components/Spinner.jsx";
 
 import mediaDevices from "../style/mediaDevices.js";
+import { useParams } from "react-router-dom";
+import axios from "../api-call-config/callConfig.js";
+import ProductFilters from "../components/ProductFilters.jsx";
+import { useOrderData } from "../context/order.js";
+import Navbar from "../components/Navbar.jsx";
+import Announcement from "../components/Announcement.jsx";
+import Footer from "../components/Footer.jsx";
+import Newsletter from "../components/Newsletter.jsx";
 
 ////////////////////////////
 
 const Container = styled.div``;
 const Wrapper = styled.div`
   padding: 5rem;
+  margin-top: 12rem;
+
   display: flex;
+
+  @media ${mediaDevices.tabPort} {
+    padding: 1rem;
+  }
 
   @media ${mediaDevices.mobile} {
     flex-direction: column;
@@ -20,7 +36,7 @@ const ImgContainer = styled.div`
 `;
 const Image = styled.img`
   width: 100%;
-  height: 90vh;
+  height: 60vh;
   object-fit: cover;
 
   @media ${mediaDevices.mobile} {
@@ -46,50 +62,25 @@ const Price = styled.span`
   font-size: 4rem;
 `;
 
-const FilterContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 3rem 0;
-  width: 60%;
-  @media ${mediaDevices.mobile} {
-    width: 100%;
-  }
-`;
-const Filter = styled.div`
-  display: flex;
-  align-items: center;
-`;
-const FilterTitle = styled.span`
-  font-size: 2rem;
-  font-weight: 200;
-`;
-const FilterColor = styled.div`
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  background-color: ${(props) => props.color};
-  margin: 0 0.5rem;
-`;
-const FilterSize = styled.select`
-  margin-left: 1rem;
-  padding: 0.5rem;
-`;
-const FilterSizeOption = styled.option``;
-
 const AddContainer = styled.div`
-  width: 60%;
+  width: 70%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  gap: 2rem;
+
+  margin-top: 3rem;
   @media ${mediaDevices.mobile} {
     width: 100%;
-    flex-direction: column;
   }
 `;
 const AmountContainer = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex;
+  align-self: flex-start;
+  gap: 2rem;
   font-weight: 700;
+  justify-content: space-between;
   @media ${mediaDevices.mobile} {
     margin-bottom: 3rem;
     font-size: 2rem;
@@ -116,62 +107,83 @@ const Button = styled.button`
   background-color: #fff;
   cursor: pointer;
   font-weight: 500;
+  width: 100%;
+  margin-top: 2rem;
 
   &:hover {
     background-color: #f8f4f4;
+  }
+
+  @media ${mediaDevices.mobile} {
+    width: 70%;
   }
 `;
 
 /////////////////////////////////////
 
 const Product = () => {
+  const { id } = useParams();
+
+  const [product, setProduct] = useState(null);
+
+  const { quantity, setSize, handleQuantity } = useOrderData();
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await axios.get(`/products/${id}`);
+        const product = res.data.data.product;
+        setProduct(product);
+        setSize(product.info[0].size);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchProduct();
+  }, [setProduct, setSize, id]);
+
   return (
     <Container>
-      <Wrapper>
-        <ImgContainer>
-          <Image src="https://i.ibb.co/S6qMxwr/jean.jpg" />
-        </ImgContainer>
+      <Navbar />
+      <Announcement />
+      {!product ? (
+        <Spinner />
+      ) : (
+        <Wrapper>
+          <ImgContainer>
+            <Image src={product.img} />
+          </ImgContainer>
 
-        <InfoContainer>
-          <Title>Denim Jumpsuit</Title>
-          <Desc>
-            is a long established fact that a reader will be distracted by the
-            readable content of a page when looking at its layout. The point of
-            using Lorem Ipsum is that it has a more-or-less normal distribution
-            of letters, as opposed to using 'Content here, content here', making
-            it look like readable English. Many desktop publishing packages and
-            web page editors now use Lorem Ipsum as their default model text,
-          </Desc>
-          <Price>$ 20</Price>
+          <InfoContainer>
+            <Title>{product.title}</Title>
+            <Desc>{product.desc}</Desc>
+            <Price>$ {product.price}</Price>
 
-          <FilterContainer>
-            <Filter>
-              <FilterTitle>Color</FilterTitle>
-              <FilterColor color="black" />
-              <FilterColor color="darkblue" />
-              <FilterColor color="gray" />
-            </Filter>
-            <Filter>
-              <FilterTitle>Size</FilterTitle>
-              <FilterSize>
-                <FilterSizeOption>XS</FilterSizeOption>
-                <FilterSizeOption>S</FilterSizeOption>
-                <FilterSizeOption>M</FilterSizeOption>
-                <FilterSizeOption>L</FilterSizeOption>
-                <FilterSizeOption>XL</FilterSizeOption>
-              </FilterSize>
-            </Filter>
-          </FilterContainer>
-          <AddContainer>
-            <AmountContainer>
-              <Remove />
-              <Amount>1</Amount>
-              <Add />
-            </AmountContainer>
-            <Button>ADD TO CART</Button>
-          </AddContainer>
-        </InfoContainer>
-      </Wrapper>
+            <ProductFilters product={product} />
+
+            <AddContainer>
+              <AmountContainer>
+                <Remove
+                  onClick={() => {
+                    handleQuantity("-");
+                  }}
+                />
+                <Amount>{quantity}</Amount>
+                <Add
+                  onClick={() => {
+                    handleQuantity("+");
+                  }}
+                />
+              </AmountContainer>
+              <Button>ADD TO CART</Button>
+            </AddContainer>
+          </InfoContainer>
+        </Wrapper>
+      )}
+
+      <Newsletter />
+      <Footer />
     </Container>
   );
 };

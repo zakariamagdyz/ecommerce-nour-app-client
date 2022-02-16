@@ -6,10 +6,9 @@ import { Link } from "react-router-dom";
 ///////////////////////////////////////////////
 
 const Container = styled.div`
-  margin: 0.3rem;
   flex: 1;
   min-width: 48%;
-  height: 60vh;
+  height: 50vh;
   position: relative;
   flex-wrap: wrap;
 
@@ -21,6 +20,7 @@ const Container = styled.div`
 const Image = styled.img`
   width: 100%;
   height: 100%;
+  display: block;
   object-fit: cover;
 `;
 const Info = styled.div`
@@ -65,7 +65,9 @@ const CategoryItem = ({ category }) => {
       />
       <Info>
         <Title>{category.name}</Title>
-        <Button to={`/category/${category._id}`}>SHOP NOW</Button>
+        <Button to={`/category/${category._id}?${category.name}`}>
+          SHOP NOW
+        </Button>
       </Info>
     </Container>
   );

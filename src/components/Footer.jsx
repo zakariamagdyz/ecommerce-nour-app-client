@@ -15,6 +15,7 @@ import mediaDevices from "../style/mediaDevices.js";
 
 const Container = styled.div`
   display: flex;
+  margin-top: 8rem;
   @media ${mediaDevices.mobile} {
     flex-direction: column;
   }

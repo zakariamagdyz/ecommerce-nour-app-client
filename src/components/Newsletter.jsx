@@ -6,7 +6,7 @@ import mediaDevices from "../style/mediaDevices.js";
 ///////////////////////////////////////////
 
 const Container = styled.div`
-  height: 60vh;
+  height: 40vh;
   background-color: #fcf5f5;
   display: flex;
   align-items: center;

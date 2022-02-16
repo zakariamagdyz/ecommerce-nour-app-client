@@ -8,8 +8,11 @@ import axios from "../api-call-config/callConfig.js";
 
 const Container = styled.div`
   display: flex;
+  margin: 12rem 0;
   padding: 2rem;
   flex-wrap: wrap;
+
+  gap: 3rem;
 
   @media ${mediaDevices.mobile} {
     flex-direction: column;

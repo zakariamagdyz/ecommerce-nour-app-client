@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import Error from "./Error.jsx";
 import Spinner from "./Spinner.jsx";
+import OrderData from "../context/order.js";
 
 const Cart = lazy(() => import("../pages/Cart.jsx"));
 const Home = lazy(() => import("../pages/Home.jsx"));
@@ -22,7 +23,14 @@ const RouterConfig = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="category/:id" element={<ProductList />} />
-        <Route path="products/:id" element={<Product />} />
+        <Route
+          path="products/:id"
+          element={
+            <OrderData>
+              <Product />
+            </OrderData>
+          }
+        />
         <Route path="/cart" element={<Cart />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />

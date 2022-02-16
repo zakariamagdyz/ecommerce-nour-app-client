@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Navbar from "../components/Navbar.jsx";
 import mediaDevices from "../style/mediaDevices.js";
 
 //////////////////////////////////////////////
