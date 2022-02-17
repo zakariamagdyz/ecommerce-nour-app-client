@@ -7,31 +7,28 @@ import {
   Title,
   Button,
   Form,
-  FormLink,
   FormInput,
+  FormLink,
   Input,
 } from "../style/auth.styles.jsx";
 
-//////////////////////////////////////////////
-
-///////////////////////////////////////////////
-
-const Login = () => {
-  const initialValues = { name: "", password: "" };
+const ForgotPass = () => {
+  const initialValues = {
+    email: "",
+  };
 
   const onSubmit = (values, { isSubmitting, resetForm }) => {
     console.log(values);
   };
 
   const validationSchema = Yup.object({
-    name: Yup.string().required().max(55),
-    password: Yup.string().required().min(8).max(55),
+    email: Yup.string().required().max(55).email(),
   });
 
   return (
     <Container>
       <Wrapper>
-        <Title>SIGN IN</Title>
+        <Title>Forgot Your Password?</Title>
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
@@ -49,31 +46,20 @@ const Login = () => {
             <Form onSubmit={handleSubmit}>
               <FormInput>
                 <Input
-                  placeholder="username"
-                  name="name"
+                  placeholder="email"
+                  name="email"
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={values.name}
+                  value={values.email}
                 />
-                {errors.name && touched.name && errors.name}
-              </FormInput>
-              <FormInput>
-                <Input
-                  placeholder="password"
-                  name="password"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.password}
-                />
-                {errors.password && touched.password && errors.password}
+                {errors.email && touched.email && errors.email}
               </FormInput>
 
               <Button type="submit" disabled={isSubmitting}>
-                LOGIN
+                Get Mail
               </Button>
 
-              <FormLink to="/">DO NOT YOU REMEMBER THE PASSWORD? </FormLink>
-              <FormLink to="/register">CREATE A NEW ACCOUNT</FormLink>
+              <FormLink to="/login">REMEMBER PASS?</FormLink>
             </Form>
           )}
         </Formik>
@@ -82,4 +68,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPass;

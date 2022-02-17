@@ -10,6 +10,8 @@ const ProductList = lazy(() => import("../pages/ProductList.jsx"));
 const Register = lazy(() => import("../pages/Register.jsx"));
 const Login = lazy(() => import("../pages/Login.jsx"));
 const Product = lazy(() => import("../pages/Product.jsx"));
+const ForgotPass = lazy(() => import("../pages/ForgotPass.jsx"));
+const ResetPass = lazy(() => import("../pages/ResetPass.jsx"));
 
 const RequireAuth = ({ isLoggedIn }) => {
   if (!isLoggedIn) return <Navigate to="/login" />;
@@ -34,6 +36,8 @@ const RouterConfig = () => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPass />} />
+        <Route path="/reset-password/:token" element={<ResetPass />} />
         <Route element={<RequireAuth />}>
           <Route path="profile" element={<div>Profile</div>} />
         </Route>
