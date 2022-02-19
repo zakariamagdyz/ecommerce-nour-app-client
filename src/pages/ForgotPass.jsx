@@ -1,24 +1,36 @@
 import { Formik } from "formik";
 import * as Yup from "yup";
-
+import { useEffect } from "react";
 import {
   Container,
   Wrapper,
   Title,
   Button,
-  Form,
-  FormInput,
+  StyledForm,
   FormLink,
-  Input,
+  ApiMessage,
 } from "../style/auth.styles.jsx";
 
-const ForgotPass = () => {
+import { connect } from "react-redux";
+import { resetMetaData } from "../redux/user/slice.js";
+import { forgotPass } from "../redux/user/actions.js";
+import FormInput from "../components/FormInput.jsx";
+
+//////////////////////////////////////////////
+
+const ForgotPass = ({ successMsg, error, forgotPass, resetMetaData }) => {
+  useEffect(() => {
+    return () => {
+      resetMetaData();
+    };
+  }, [resetMetaData]);
+
   const initialValues = {
     email: "",
   };
 
-  const onSubmit = (values, { isSubmitting, resetForm }) => {
-    console.log(values);
+  const onSubmit = async (values, { isSubmitting, resetForm }) => {
+    await forgotPass(values);
   };
 
   const validationSchema = Yup.object({
@@ -29,38 +41,23 @@ const ForgotPass = () => {
     <Container>
       <Wrapper>
         <Title>Forgot Your Password?</Title>
+        {successMsg && <ApiMessage>{successMsg}</ApiMessage>}
+        {error && <ApiMessage error>{error}</ApiMessage>}
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
           validationSchema={validationSchema}
         >
-          {({
-            handleSubmit,
-            handleBlur,
-            handleChange,
-            values,
-            errors,
-            touched,
-            isSubmitting,
-          }) => (
-            <Form onSubmit={handleSubmit}>
-              <FormInput>
-                <Input
-                  placeholder="email"
-                  name="email"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.email}
-                />
-                {errors.email && touched.email && errors.email}
-              </FormInput>
+          {({ isSubmitting }) => (
+            <StyledForm>
+              <FormInput name="email" label="Email Address" type="email" />
 
               <Button type="submit" disabled={isSubmitting}>
-                Get Mail
+                {isSubmitting ? "Loading..." : "Send Mail"}
               </Button>
 
               <FormLink to="/login">REMEMBER PASS?</FormLink>
-            </Form>
+            </StyledForm>
           )}
         </Formik>
       </Wrapper>
@@ -68,4 +65,13 @@ const ForgotPass = () => {
   );
 };
 
-export default ForgotPass;
+const mapStateToProps = (state) => ({
+  error: state.user.error,
+  successMsg: state.user.successMsg,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  forgotPass: (body) => dispatch(forgotPass(body)),
+  resetMetaData: () => dispatch(resetMetaData()),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(ForgotPass);

@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import mediaDevices from "./mediaDevices.js";
 import { Link } from "react-router-dom";
+import { Form } from "formik";
 
 export const Container = styled.div`
   width: 100%;
@@ -18,37 +18,18 @@ export const Container = styled.div`
 `;
 
 export const Wrapper = styled.div`
-  width: ${(props) => (props.wider ? "40%" : "25%")};
+  width: 40rem;
   padding: 2rem;
   background-color: #fff;
-
-  @media ${mediaDevices.tabLand} {
-    width: 40%;
-  }
-  @media ${mediaDevices.tabPort} {
-    width: 50%;
-  }
-
-  @media ${mediaDevices.mobile} {
-    width: ${(props) => (props.wider ? "80%" : "60%")};
-  }
 `;
 export const Title = styled.h1`
   font-size: 2.4rem;
-  font-weight: 300;
-  margin-bottom: 3rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
 `;
-export const Form = styled.form`
+export const StyledForm = styled(Form)`
   display: flex;
   flex-direction: column;
-`;
-export const Input = styled.input`
-  margin: 0.2rem 0;
-  padding: 1rem;
-
-  &[type="password"] {
-    letter-spacing: 0.3rem;
-  }
 `;
 
 export const Button = styled.button`
@@ -58,7 +39,15 @@ export const Button = styled.button`
   background: teal;
   cursor: pointer;
   color: white;
-  margin: 1rem 0.3rem 2rem;
+  margin: 0 0.3rem 2rem;
+  align-self: flex-start;
+  margin-top: 1.5rem;
+
+  &:disabled {
+    cursor: not-allowed;
+    background: #ebebe4;
+    color: #c6c6c6;
+  }
 `;
 
 export const FormLink = styled(Link)`
@@ -67,13 +56,17 @@ export const FormLink = styled(Link)`
   text-decoration: underline;
   display: block;
   cursor: pointer;
+  align-self: flex-start;
 `;
 
-export const FormInput = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  color: var(--err-color);
+export const ApiMessage = styled.p`
+  background-color: ${(props) =>
+    props.error ? "var(--err-color)" : "var(--success-color)"};
+  padding: 0.8rem;
+  color: #f5f5f5;
+  border-radius: 0.4rem;
+  display: inline-block;
+  margin-bottom: 1rem;
   font-size: 1.3rem;
-  margin: 1rem;
+  box-shadow: 0 0.2rem 0.2rem rgba(0, 0, 0, 0.1);
 `;

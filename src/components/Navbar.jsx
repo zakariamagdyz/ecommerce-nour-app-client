@@ -5,6 +5,9 @@ import Badge from "@mui/material/Badge";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import mediaDevices from "../style/mediaDevices.js";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { Fragment } from "react";
+import { signOut } from "../redux/user/actions.js";
 ////////////////////////////////////////////////////////////
 
 const Container = styled.div`
@@ -78,6 +81,7 @@ const MenuItem = styled(Link)`
   cursor: pointer;
   margin-left: 2.5rem;
   color: #333 !important;
+  text-transform: capitalize;
 
   span {
     min-width: 1rem;
@@ -87,10 +91,14 @@ const MenuItem = styled(Link)`
   svg {
     font-size: 1.6rem;
   }
+
+  @media ${mediaDevices.mobile} {
+    margin-left: 1.5rem;
+  }
 `;
 
 ////////////////////////////////////////////////////////////
-const Navbar = () => {
+const Navbar = ({ isLoggedIn, user, logOut }) => {
   return (
     <Container>
       <Wrapper>
@@ -105,9 +113,20 @@ const Navbar = () => {
           <Logo>LAMA.</Logo>
         </Center>
         <Right>
-          <MenuItem to="/">HOME</MenuItem>
-          <MenuItem to="/register">REGISTER</MenuItem>
-          <MenuItem to="/login">SIGN IN</MenuItem>
+          <MenuItem to="/">home</MenuItem>
+          {!isLoggedIn ? (
+            <Fragment>
+              <MenuItem to="/register">register</MenuItem>
+              <MenuItem to="/login">sign in</MenuItem>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <MenuItem as="div">{user.name.split(" ")[0]}</MenuItem>
+              <MenuItem as="div" onClick={logOut}>
+                sign out
+              </MenuItem>
+            </Fragment>
+          )}
           <MenuItem as="div">
             <Badge badgeContent={1} color="primary">
               <ShoppingCartOutlinedIcon />
@@ -119,4 +138,13 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+const mapStateToProps = (state) => ({
+  isLoggedIn: state.user.isLoggedIn,
+  user: state.user.currentUser,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  logOut: () => dispatch(signOut()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

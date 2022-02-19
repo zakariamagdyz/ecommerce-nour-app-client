@@ -1,8 +1,9 @@
 import { createGlobalStyle } from "styled-components";
 import RouterConfig from "./components/RouterConfig.jsx";
 
-import { ToastContainer } from "react-toastify";
-import { injectStyle } from "react-toastify/dist/inject-style";
+import { getUserState } from "./redux/user/actions.js";
+import { connect } from "react-redux";
+import { useEffect } from "react";
 
 import mediaDevices from "./style/mediaDevices.js";
 
@@ -20,7 +21,8 @@ const GlobalStyle = global.createGlobalStyle`
 
 
 :root{
-  --err-color:#ff0000
+  --err-color:#ff0000;
+  --success-color:#4BB543 ;
 }
 
 html {
@@ -59,18 +61,21 @@ body{
 
 ///////////////////////////////////////////////////////
 
-if (window) {
-  injectStyle();
-}
+const App = ({ getAuthState }) => {
+  useEffect(() => {
+    getAuthState();
+  }, [getAuthState]);
 
-const App = () => {
   return (
     <div>
       <GlobalStyle />
-      <ToastContainer />
       <RouterConfig />
     </div>
   );
 };
 
-export default App;
+const mapDispatchToProps = (dispatch) => ({
+  getAuthState: () => dispatch(getUserState()),
+});
+
+export default connect(null, mapDispatchToProps)(App);

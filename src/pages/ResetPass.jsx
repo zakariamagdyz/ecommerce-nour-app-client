@@ -1,36 +1,49 @@
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { useEffect } from "react";
 
 import {
   Container,
   Wrapper,
   Title,
   Button,
-  Form,
-  FormInput,
-  Input,
+  ApiMessage,
+  FormLink,
+  StyledForm,
 } from "../style/auth.styles.jsx";
 
-const ResetPass = () => {
+import { connect } from "react-redux";
+import { resetMetaData } from "../redux/user/slice.js";
+import { resetPass } from "../redux/user/actions.js";
+import { useParams } from "react-router-dom";
+import FormInput from "../components/FormInput.jsx";
+
+/////////////////////////////
+const ResetPass = ({ error, resetMetaData, resetPass }) => {
+  // Get reset token
+  const { token } = useParams();
+  // Clear Error & success message
+  useEffect(() => {
+    return () => {
+      resetMetaData();
+    };
+  }, [resetMetaData]);
+
   const initialValues = {
-    currentPassword: "",
-    newPassword: "",
+    password: "",
     passwordConfirm: "",
   };
-
-  const onSubmit = (values, { isSubmitting, resetForm }) => {
-    console.log(values);
+  const onSubmit = async (values, { isSubmitting, resetForm }) => {
+    await resetPass({ token, data: values }).unwrap().then;
   };
-
   const validationSchema = Yup.object({
-    currentPassword: Yup.string().required().max(55),
-    newPassword: Yup.string().required().min(8).max(55),
+    password: Yup.string().required().min(8).max(55),
     passwordConfirm: Yup.string()
       .required()
       .min(8)
       .max(55)
       .test("passwordConfirm", "Two passwords don't match", function (val) {
-        return this.parent.newPassword === val;
+        return this.parent.password === val;
       }),
   });
 
@@ -38,67 +51,27 @@ const ResetPass = () => {
     <Container>
       <Wrapper>
         <Title>Reset Your Password</Title>
+        {error && <ApiMessage error>{error}</ApiMessage>}
+
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
           validationSchema={validationSchema}
         >
-          {({
-            handleSubmit,
-            handleBlur,
-            handleChange,
-            values,
-            errors,
-            touched,
-            isSubmitting,
-          }) => (
-            <Form onSubmit={handleSubmit}>
-              <FormInput>
-                <Input
-                  placeholder="current password"
-                  name="currentPassword"
-                  type="password"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.currentPassword}
-                />
-                {errors.currentPassword &&
-                  touched.currentPassword &&
-                  errors.currentPassword}
-              </FormInput>
-
-              <FormInput>
-                <Input
-                  placeholder="new password"
-                  name="newPassword"
-                  type="password"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.newPassword}
-                />
-                {errors.newPassword &&
-                  touched.newPassword &&
-                  errors.newPassword}
-              </FormInput>
-
-              <FormInput>
-                <Input
-                  placeholder="password confirm"
-                  name="passwordConfirm"
-                  type="password"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.passwordConfirm}
-                />
-                {errors.passwordConfirm &&
-                  touched.passwordConfirm &&
-                  errors.passwordConfirm}
-              </FormInput>
+          {({ isSubmitting }) => (
+            <StyledForm>
+              <FormInput name="password" type="password" label="Password" />
+              <FormInput
+                name="passwordConfirm"
+                type="password"
+                label="Repeat Password"
+              />
 
               <Button type="submit" disabled={isSubmitting}>
-                Reset Password
+                {isSubmitting ? "Loading..." : "Reset Password"}
               </Button>
-            </Form>
+              <FormLink to="/forgot-password">Forgot Pass?</FormLink>
+            </StyledForm>
           )}
         </Formik>
       </Wrapper>
@@ -106,4 +79,13 @@ const ResetPass = () => {
   );
 };
 
-export default ResetPass;
+const mapStateToProps = (state) => ({
+  error: state.user.error,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  resetPass: (body) => dispatch(resetPass(body)),
+  resetMetaData: () => dispatch(resetMetaData()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ResetPass);

@@ -1,30 +1,38 @@
 import { Formik } from "formik";
 import * as Yup from "yup";
-
 import {
   Container,
   Wrapper,
   Title,
   Button,
-  Form,
+  StyledForm,
   FormLink,
-  FormInput,
-  Input,
+  ApiMessage,
 } from "../style/auth.styles.jsx";
+import { connect } from "react-redux";
+import { resetMetaData } from "../redux/user/slice.js";
+import { signIn } from "../redux/user/actions.js";
+import { useEffect } from "react";
+import FormInput from "../components/FormInput.jsx";
 
 //////////////////////////////////////////////
-
 ///////////////////////////////////////////////
 
-const Login = () => {
-  const initialValues = { name: "", password: "" };
+const Login = ({ error, signIn, resetMetaData }) => {
+  useEffect(() => {
+    return () => {
+      resetMetaData();
+    };
+  }, [resetMetaData]);
 
-  const onSubmit = (values, { isSubmitting, resetForm }) => {
-    console.log(values);
+  const initialValues = { email: "", password: "" };
+
+  const onSubmit = async (values, { isSubmitting, resetForm }) => {
+    await signIn(values);
   };
 
   const validationSchema = Yup.object({
-    name: Yup.string().required().max(55),
+    email: Yup.string().required().max(55).email(),
     password: Yup.string().required().min(8).max(55),
   });
 
@@ -32,49 +40,25 @@ const Login = () => {
     <Container>
       <Wrapper>
         <Title>SIGN IN</Title>
+        {error && <ApiMessage error>{error}</ApiMessage>}
+
         <Formik
           initialValues={initialValues}
           onSubmit={onSubmit}
           validationSchema={validationSchema}
         >
-          {({
-            handleSubmit,
-            handleBlur,
-            handleChange,
-            values,
-            errors,
-            touched,
-            isSubmitting,
-          }) => (
-            <Form onSubmit={handleSubmit}>
-              <FormInput>
-                <Input
-                  placeholder="username"
-                  name="name"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.name}
-                />
-                {errors.name && touched.name && errors.name}
-              </FormInput>
-              <FormInput>
-                <Input
-                  placeholder="password"
-                  name="password"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.password}
-                />
-                {errors.password && touched.password && errors.password}
-              </FormInput>
-
+          {({ isSubmitting }) => (
+            <StyledForm>
+              <FormInput name="email" label="Email" />
+              <FormInput name="password" type="password" label="Password" />
               <Button type="submit" disabled={isSubmitting}>
                 LOGIN
               </Button>
-
-              <FormLink to="/">DO NOT YOU REMEMBER THE PASSWORD? </FormLink>
+              <FormLink to="/forgot-password">
+                DO NOT YOU REMEMBER THE PASSWORD?
+              </FormLink>
               <FormLink to="/register">CREATE A NEW ACCOUNT</FormLink>
-            </Form>
+            </StyledForm>
           )}
         </Formik>
       </Wrapper>
@@ -82,4 +66,15 @@ const Login = () => {
   );
 };
 
-export default Login;
+//////////////////////////////////////////////
+///////////////////////////////////////////////
+const mapStateToProps = (state) => ({
+  error: state.user.error,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  signIn: (body) => dispatch(signIn(body)),
+  resetMetaData: () => dispatch(resetMetaData()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
