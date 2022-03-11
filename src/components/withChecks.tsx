@@ -21,6 +21,8 @@ const withChecks = <DataType, ChecksType extends IChecks<DataType>>(
       return <Spinner />;
     }
 
+    // handle server error or server is down
+
     if (isError) {
       return (
         <Message error>
@@ -29,7 +31,8 @@ const withChecks = <DataType, ChecksType extends IChecks<DataType>>(
       );
     }
 
-    return data && data.length ? (
+    // if there's no data don't show any thing else check for arr length
+    return !data ? null : data.length ? (
       <WrappedComponent data={data} {...others} />
     ) : (
       <Message>{message ? message : "There's nothing to show yet."}</Message>

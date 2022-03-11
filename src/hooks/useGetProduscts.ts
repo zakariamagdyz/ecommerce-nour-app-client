@@ -51,7 +51,7 @@ export const useGetProducts = (id: string, filter: IFilter): IProducts => {
         const { sort, size, color } = filter;
         let res;
 
-        setProducts((prev) => ({ ...prev, loading: true }));
+        setProducts((prev) => ({ ...prev, isLoading: true }));
 
         if (id) {
           res = await axios.get(
@@ -64,9 +64,9 @@ export const useGetProducts = (id: string, filter: IFilter): IProducts => {
         }
 
         const { products } = res.data?.data;
-        setProducts((prev) => ({ ...prev, loading: false, data: products }));
+        setProducts((prev) => ({ ...prev, isLoading: false, data: products }));
       } catch (error) {
-        setProducts((prev) => ({ ...prev, loading: false, error: true }));
+        setProducts((prev) => ({ ...prev, isLoading: false, error: true }));
       }
     };
 
