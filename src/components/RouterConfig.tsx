@@ -58,7 +58,7 @@ const RouterConfig = () => {
         </Route>
         <Route path="/activate-account/:activation" element={<Activation />} />
         <Route path="/processing-order" element={<ProcessingOrder />} />
-        <Route path="/oreder-details" element={<OrderDetail />} />
+        <Route path="/order-details" element={<OrderDetail />} />
         <Route element={<RequireAuth />}>
           <Route path="profile" element={<div>Profile</div>} />
         </Route>

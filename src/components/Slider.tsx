@@ -64,7 +64,7 @@ const ImgContainer = styled.div`
 `;
 const Image = styled.img`
   width: 100%;
-  height: 80%;
+  height: 100%;
   object-fit: cover;
 `;
 
@@ -111,10 +111,14 @@ const Slider: React.FC = () => {
         <ArrowLeftOutlinedIcon />
       </Arrow>
       <Wrapper slideIndex={slideIndex}>
-        {sliderItems.map((sliderItem) => (
+        {sliderItems.map((sliderItem, inx) => (
           <Slide key={sliderItem.id} bg={sliderItem.bg}>
             <ImgContainer>
-              <Image src={sliderItem.img} />
+              <Image
+                src={`${process.env.REACT_APP_API_URL_DEV}/imgs/slider-${
+                  inx + 1
+                }.jpg`}
+              />
             </ImgContainer>
             <InfoContainer>
               <Title>{sliderItem.title}</Title>

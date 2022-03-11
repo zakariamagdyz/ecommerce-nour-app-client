@@ -30,15 +30,16 @@ const Header = styled.h2<{ error: boolean }>`
   }
 `;
 
-interface IProps {
+type Props = {
   error?: boolean;
-}
+  children: string;
+};
 
-const Message: React.FC<IProps> = ({ error = false, children }) => {
+const Message: React.FC<Props> = ({ error, children }) => {
   return (
     <Container>
       {error && <WarningIcon />}
-      <Header error={error}>{children}</Header>
+      <Header error={!!error}>{children}</Header>
     </Container>
   );
 };

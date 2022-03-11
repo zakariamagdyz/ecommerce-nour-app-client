@@ -2,7 +2,7 @@ import styled from "styled-components";
 import axios from "../axios/callConfig";
 // types
 import { AxiosResponse, AxiosError } from "axios";
-import { IProduct } from "../redux/cart/slice";
+import { IOrder, setError, setOrder } from "../redux/order/slice";
 // components
 import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
@@ -11,10 +11,11 @@ import mediaDevices from "../style/mediaDevices";
 import BagProduct from "../components/BagProduct";
 import StripeCheckout, { Token } from "react-stripe-checkout";
 // hooks
-import { useAppSelector } from "../redux/hooks";
+import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { useNavigate } from "react-router-dom";
 import { selectAmount } from "../redux/cart/slice";
 import { useState, useEffect } from "react";
+
 //////////////////////////////////////
 // style
 const Container = styled.div``;
@@ -99,22 +100,19 @@ const SummaryButton = styled.button`
   cursor: pointer;
 `;
 
+const Tip = styled.p`
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  color: red;
+`;
+
 //////////////////////////////////////
-interface IContact {
-  email: string;
-  billing_details: string;
-}
-interface IOrder {
-  userId?: string;
-  items: IProduct[];
-  amount: number;
-  contact: IContact;
-}
 
 const Cart: React.FC = () => {
   const cartItems = useAppSelector((state) => state.cart.items);
   const totalPrice = useAppSelector(selectAmount);
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [stripeToken, setStripeToken] = useState<Token | null>(null);
 
@@ -137,13 +135,15 @@ const Cart: React.FC = () => {
             billing_details: res.data.data.data.billing_details,
           },
         };
-        navigate("/processing-order", { state: order });
+        dispatch(setOrder(order));
       } catch (error) {
         let err = error as AxiosError<{ message: string }>;
         if (!err.response) {
           throw err;
         }
-        console.log(err.response.data);
+        dispatch(setError(err.response.data.message));
+      } finally {
+        navigate("/processing-order");
       }
     };
 
@@ -201,6 +201,9 @@ const Cart: React.FC = () => {
                 stripeKey={process.env.REACT_APP_STRIPE_KEY!!}
               >
                 <SummaryButton>CHECK OUT NOW</SummaryButton>
+                <Tip>
+                  * Please use 4242 4242 4242 4242 to continue payment process
+                </Tip>
               </StripeCheckout>
             </Summary>
           )}

@@ -13,7 +13,7 @@ import { useGetProduct } from "../hooks/useGetProduct";
 import { useParams } from "react-router-dom";
 import { useOrderData } from "../context/order";
 import { useAppDispatch } from "../redux/hooks";
-import { useState, useRef } from "react";
+import { useState } from "react";
 // types & actions
 import { IProduct, addToCart } from "../redux/cart/slice";
 

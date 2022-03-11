@@ -68,6 +68,14 @@ const Icon = styled.div`
   }
 `;
 
+const StyledLink = styled(Link)`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 //////////////////////////////////////
 interface Props {
   item: IProduct;
@@ -78,17 +86,17 @@ const Product: React.FC<Props> = ({ item }) => {
       <Circle />
       <Image src={item.img} />
       <Info>
-        <Icon>
+        {/* <Icon>
           <ShoppingCartOutlinedIcon />
-        </Icon>
+        </Icon> */}
         <Icon>
-          <Link to={`/products/${item._id}`}>
+          <StyledLink to={`/products/${item._id}`}>
             <SearchOutlinedIcon />
-          </Link>
+          </StyledLink>
         </Icon>
-        <Icon>
+        {/* <Icon>
           <FavoriteBorderOutlinedIcon />
-        </Icon>
+        </Icon> */}
       </Info>
     </Container>
   );

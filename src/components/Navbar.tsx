@@ -75,7 +75,7 @@ const Input = styled.input`
 
 const Logo = styled.h1`
   font-weight: bold;
-  text-align: center;
+  text-align: left;
 `;
 
 const MenuItem = styled(Link)`
@@ -114,15 +114,15 @@ const Navbar: React.FC = () => {
   return (
     <Container>
       <Wrapper>
-        <Left>
+        {/* <Left>
           <Language>EN</Language>
           <SearchContainer>
             <Input placeholder="Search" />
             <Search style={{ color: "gray", fontSize: "1.6rem" }} />
           </SearchContainer>
-        </Left>
+        </Left> */}
         <Center>
-          <Logo>LAMA.</Logo>
+          <Logo>NOUR Shop.</Logo>
         </Center>
         <Right>
           <MenuItem to="/">home</MenuItem>
